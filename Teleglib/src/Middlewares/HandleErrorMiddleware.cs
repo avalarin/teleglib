@@ -18,13 +18,10 @@ namespace Teleglib.Middlewares {
                 return await chain.NextAsync(data);
             }
             catch (Exception e) {
-                _logger.LogError(0, e, "Unexpected error occured");
-                var incomeMessage = data.Features.RequireOne<UpdateInfoFeature>().Update.Message;
-                var chatId = incomeMessage.Chat.Id.ToString();
-                return data.AddRenderer(new SendMessageRenderer(new SendMessageData() {
-                    ChatId = chatId.ToString(),
+                _logger.LogError(0, e, "Unexpected error occurred");
+                return data.AddResponseRenderer(new SendMessageData() {
                     Text = $"Error occured: [{e.GetType().Name}] {e.Message}"
-                }));
+                });
             }
         }
     }
