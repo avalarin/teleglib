@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace Teleglib.Controllers {
@@ -7,7 +6,7 @@ namespace Teleglib.Controllers {
 
         private readonly List<string> _namespaces = new List<string>();
         private Assembly _assembly;
-        private bool _generateRoutes = false;
+        private bool _generateRoutes;
 
         public ControllerFactoryConfigurationBuilder AddNamespace(string ns) {
             _namespaces.Add(ns);

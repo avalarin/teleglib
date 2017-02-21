@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Teleglib.Controllers.Actions;
 using Teleglib.Controllers.Attributes;
 using Teleglib.Middlewares;
