@@ -1,6 +1,6 @@
 ﻿using Teleglib.Middlewares;
 
-namespace Teleglib.Controllers.Actions {
+namespace Teleglib.Controllers.Results {
     public interface IActionResult {
         MiddlewareData Render(MiddlewareData input);
     }

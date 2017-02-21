@@ -3,7 +3,7 @@ using Teleglib.Middlewares;
 using Teleglib.Renderers;
 using Teleglib.Telegram.Models;
 
-namespace Teleglib.Controllers.Actions {
+namespace Teleglib.Controllers.Results {
     public class ResponseResult : IActionResult {
 
         public string Text { get; set; }
