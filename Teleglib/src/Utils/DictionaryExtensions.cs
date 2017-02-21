@@ -11,6 +11,11 @@ namespace Teleglib.Utils {
             return source.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
+        public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue = default(TValue)) {
+            TValue value;
+            return dict.TryGetValue(key, out value) ? value : defaultValue;
+        }
+
         public static Maybe<TValue> Get<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) {
             TValue value;
             if (dict.TryGetValue(key, out value)) {

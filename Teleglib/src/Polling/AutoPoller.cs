@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Teleglib.Telegram.Client;
 
@@ -25,21 +24,12 @@ namespace Teleglib.Polling {
         private Task _task;
         private CancellationTokenSource _cancellationTokenSource;
 
-        public AutoPoller(ITelegramClient client, IPollerHistoryStorage historyStorage) {
+        public AutoPoller(ITelegramClient client, IPollerHistoryStorage historyStorage, IAutoPollerConfiguration configuration, ILoggerFactory loggerFactory) {
             _client = client;
             _historyStorage = historyStorage;
 
-            _logger = NullLogger.Instance;
-            _oneTimeLimit = DefaultOneTimeLimit;
-            _poolingTimeout = DefaultPollingTimeout;
-            _fieldsFilter = null;
-        }
 
-        public AutoPoller(ITelegramClient client, IPollerHistoryStorage historyStorage, IAutoPollerConfiguration configuration) {
-            _client = client;
-            _historyStorage = historyStorage;
-
-            _logger = configuration.LoggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
+            _logger = loggerFactory.CreateLogger(GetType());
             _oneTimeLimit = configuration.OneTimeLimit ?? DefaultOneTimeLimit;
             _poolingTimeout = configuration.PoolingTimeout ?? DefaultPollingTimeout;
             _fieldsFilter = configuration.FieldsFilter;

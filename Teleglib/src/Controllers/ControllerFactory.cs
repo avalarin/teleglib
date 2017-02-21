@@ -30,7 +30,7 @@ namespace Teleglib.Controllers {
 
             _types = assembly.GetTypes()
                 .Select(t => t.GetTypeInfo())
-                .Where(t => t.IsClass && namespaces.Contains(t.Namespace))
+                .Where(t => t.IsClass && (!namespaces.Any() || namespaces.Contains(t.Namespace)))
                 .Select(type => new {type, match = ControllerNameRegex.Match(type.Name)})
                 .Where(t => t.match.Success)
                 .ToDictionary(t => t.match.Groups[1].Value, t => t.type, StringComparer.OrdinalIgnoreCase);

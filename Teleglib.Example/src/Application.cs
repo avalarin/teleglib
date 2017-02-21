@@ -1,14 +1,19 @@
 ﻿using System;
-using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Teleglib.Bot;
 using Teleglib.Controllers;
+using Teleglib.Middlewares;
 using Teleglib.Router;
 
 namespace Teleglib.Example {
     public class Application : BotApplication {
-        public Application(IServiceCollection services) : base(services) {
+        private readonly IConfiguration _configuration;
+
+        public Application(string configFile = "config.json") : base(new ServiceCollection()) {
+            _configuration = new ConfigurationBuilder()
+                .AddJsonFile(configFile, optional: true)
+                .Build();
         }
 
         protected override IServiceProvider CreateServiceProvider(IServiceCollection serviceCollection) {
@@ -22,22 +27,13 @@ namespace Teleglib.Example {
                 minLevel: LogLevel.Trace
             );
             services.AddSingleton<ILoggerFactory>(loggerFactory);
-
-            services.AddControllers(b =>
-                b.SetAssembly(typeof(Application).GetTypeInfo().Assembly)
-                 .AddNamespace("Teleglib.Example.Controllers")
-                 .GenerateRoutes()
-            );
+            services.AddSingleton<IConfiguration>(_configuration);
         }
 
-        protected override void Configure(ApplicationBuilder builder) {
-            builder
-                .ConfigureTelegramClient(c => c.SetToken(""))
-                .EnableAutoPolling()
-                .ConfigureMiddlewares(m => m
-                    .InsertLast<RouterMiddleware>()
-                    .InsertLast<ControllersMiddleware>()
-                );
+        private void ConfigureMiddlewares(MiddlewaresChainBuilder chainBuilder) {
+            chainBuilder
+                .InsertLast<RouterMiddleware>()
+                .InsertLast<ControllersMiddleware>();
         }
     }
 }

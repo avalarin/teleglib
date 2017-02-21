@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Teleglib.Telegram.Exceptions;
 using Teleglib.Telegram.Models;
@@ -29,17 +28,18 @@ namespace Teleglib.Telegram.Client {
 
         private readonly JsonSerializer _serializer;
 
-        public TelegramClient(IClientConfiguration configuration) {
+        public TelegramClient(IClientConfiguration configuration, ILoggerFactory loggerFactory) {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (string.IsNullOrWhiteSpace(configuration.Token)) throw new ArgumentException("Token required");
             if (!ValidateTokenRegex.IsMatch(configuration.Token)) throw new ArgumentException("Invalid token");
+
+            _logger = loggerFactory.CreateLogger(GetType());
 
             _token = configuration.Token;
             _uriWithToken = new Uri(_baseUrl + _token + "/");
 
             _requestTimeout = configuration.RequestTimeout ?? DefaultRequestTimeout;
             _defaultGetUpdatesTimeout = configuration.DefaultGetUpdatesTimeout ?? DefaultGetUpdatesTimeout;
-            _logger = configuration.LoggerFactory?.CreateLogger(GetType()) ?? NullLogger.Instance;
 
             _serializer = new JsonSerializer();
         }

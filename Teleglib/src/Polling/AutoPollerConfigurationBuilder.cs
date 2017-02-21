@@ -3,23 +3,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Teleglib.Polling {
     public class AutoPollerConfigurationBuilder {
-        private ILoggerFactory _loggerFactory;
         private int? _oneTimeLimit;
         private TimeSpan? _poolingTimeout;
         private string[] _fieldsFilter;
 
         private AutoPollerConfigurationBuilder() {
-            _loggerFactory = null;
             _fieldsFilter = null;
             _oneTimeLimit = null;
             _poolingTimeout = null;
         }
 
-        public AutoPollerConfigurationBuilder SetLoggerFactory(ILoggerFactory loggerFactory) {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
-            _loggerFactory = loggerFactory;
-            return this;
-        }
 
         public AutoPollerConfigurationBuilder SetOneTimeLimit(int oneTimeLimit) {
             _oneTimeLimit = oneTimeLimit;
@@ -38,7 +31,7 @@ namespace Teleglib.Polling {
         }
 
         public IAutoPollerConfiguration Build() {
-            return new Configuration(_loggerFactory, _oneTimeLimit, _poolingTimeout, _fieldsFilter);
+            return new Configuration(_oneTimeLimit, _poolingTimeout, _fieldsFilter);
         }
 
         public static AutoPollerConfigurationBuilder Create() {
@@ -46,16 +39,14 @@ namespace Teleglib.Polling {
         }
 
         private class Configuration : IAutoPollerConfiguration {
-            public ILoggerFactory LoggerFactory { get; }
             public int? OneTimeLimit { get; }
             public TimeSpan? PoolingTimeout { get; }
             public string[] FieldsFilter { get; }
 
-            public Configuration(ILoggerFactory loggerFactory, int? oneTimeLimit, TimeSpan? poolingTimeout, string[] fieldsFilter) {
+            public Configuration(int? oneTimeLimit, TimeSpan? poolingTimeout, string[] fieldsFilter) {
                 OneTimeLimit = oneTimeLimit;
                 PoolingTimeout = poolingTimeout;
                 FieldsFilter = fieldsFilter;
-                LoggerFactory = loggerFactory;
             }
         }
 

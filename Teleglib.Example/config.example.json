@@ -1,0 +1,10 @@
+{
+    "Teleglib": {
+        "Client": {
+            "Token": ""
+        },
+        "AutoPoller": {
+            "Enabled": true
+        }
+    }
+}
