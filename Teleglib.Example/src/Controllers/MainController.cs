@@ -1,17 +1,23 @@
 ﻿using Teleglib.Controllers.Attributes;
 using Teleglib.Controllers.Results;
+using Teleglib.Features;
 using Teleglib.Middlewares;
 
 namespace Teleglib.Example.Controllers {
-    [Route("/main")]
+    [Route("/get")]
     public class MainController {
-        [Route("/index")]
+
+        [Route("name")]
         public IActionResult Index(MiddlewareData data) {
-            return new ResponseResult() { Text = "Группа!"};
+            var user = data.Features.RequireOne<UpdateInfoFeature>().Update.Message.Chat;
+            return new ResponseResult() { Text = $"Имя: {user.FirstName} {user.LastName}"};
         }
-        [Route("b")]
+
+        [Route("nick")]
         public IActionResult Subgroup(MiddlewareData data) {
-            return new ResponseResult() { Text = "Подгруппа!"};
+            var user = data.Features.RequireOne<UpdateInfoFeature>().Update.Message.Chat;
+            return new ResponseResult() { Text = $"Никнейм: {user.UserName}"};
         }
+
     }
 }

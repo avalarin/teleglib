@@ -4,27 +4,43 @@ using System.Collections.Generic;
 namespace Teleglib.Router {
     public class RouteMatch {
 
-        public static readonly RouteMatch Unsuccess = new RouteMatch(false, false, null, null);
+        public static readonly RouteMatch Unsuccess = new RouteMatch();
 
-        public bool IsMatched { get; }
+        public bool IsMatched { get; private set; }
 
-        public bool IsCompleted { get; }
+        public bool IsCompleted { get; private set; }
 
-        public IRoute Route { get; }
+        public IRoute Route { get; private set; }
 
-        public Dictionary<string, string> Fields { get; }
+        public Dictionary<string, string> Fields { get; private set; }
 
-        private RouteMatch(bool isMatched, bool isCompleted, IRoute route, Dictionary<string, string> fields) {
-            IsMatched = isMatched;
-            IsCompleted = isCompleted;
-            Route = route;
-            Fields = fields;
+        public String CompletionText { get; private set; }
+
+        private RouteMatch() {
         }
 
-        public static RouteMatch Create(IRoute route, Dictionary<string, string> fields, bool completed) {
+        public static RouteMatch CreateCompleted(IRoute route, Dictionary<string, string> fields) {
             if (route == null) throw new ArgumentNullException(nameof(route));
             if (fields == null) throw new ArgumentNullException(nameof(fields));
-            return new RouteMatch(true, completed, route, fields);
+            return new RouteMatch() {
+                IsMatched = true,
+                IsCompleted = true,
+                Route = route,
+                Fields = fields,
+                CompletionText = null
+            };
+        }
+
+        public static RouteMatch CreateUncompleted(IRoute route, Dictionary<string, string> fields, string completionText) {
+            if (route == null) throw new ArgumentNullException(nameof(route));
+            if (fields == null) throw new ArgumentNullException(nameof(fields));
+            return new RouteMatch() {
+                IsMatched = true,
+                IsCompleted = false,
+                Route = route,
+                Fields = fields,
+                CompletionText = completionText
+            };
         }
 
     }

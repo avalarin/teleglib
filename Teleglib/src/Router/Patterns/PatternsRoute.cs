@@ -1,6 +1,7 @@
+ using System;
  using System.Collections.Generic;
 using System.Linq;
-using Teleglib.Utils;
+ using Teleglib.Utils;
 
 namespace Teleglib.Router.Patterns {
     public class PatternsRoute : IRoute {
@@ -38,7 +39,13 @@ namespace Teleglib.Router.Patterns {
 
             var completed = routingData.PathParts.Length == Parts.Length;
 
-            return RouteMatch.Create(this, fields, completed);
+            if (completed) return RouteMatch.CreateCompleted(this, fields);
+
+            var nextPart = Parts[routingData.PathParts.Length];
+            var nextExactPath = nextPart as ExactRoutePatternPart;
+            if (nextExactPath == null) throw new InvalidOperationException("Cannot create completion link for route part " + nextPart.GetType());
+            var completionText = "/" + nextExactPath.ExactValue;
+            return RouteMatch.CreateUncompleted(this, fields, completionText);
         }
 
         public override string ToString() {

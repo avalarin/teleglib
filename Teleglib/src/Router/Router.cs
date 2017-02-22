@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +13,14 @@ namespace Teleglib.Router {
             _logger = loggerFactory.CreateLogger(GetType());
         }
 
-        public RouteMatch FindRoute(RoutingData routingData) {
-            return _routes
+        public RoutingResult FindRoute(RoutingData routingData) {
+            var matched = _routes
                 .Select(r => r.Match(routingData))
-                .Where(m => m.IsMatched)
-                .OrderByDescending(m => m.IsCompleted)
-                .FirstOrDefault() ?? RouteMatch.Unsuccess;
+                .Where(m => m.IsMatched).ToArray();
+
+            if (matched.Length == 0) return RoutingResult.Mismatched;
+            var completed = matched.FirstOrDefault(m => m.IsCompleted);
+            return new RoutingResult(completed, matched.Where(r => !r.IsCompleted));
         }
 
         public void RegisterRoute(IRoute route) {

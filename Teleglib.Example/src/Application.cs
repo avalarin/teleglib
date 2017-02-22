@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Teleglib.Controllers;
 using Teleglib.Middlewares;
 using Teleglib.Router;
+using Teleglib.Storage;
 
 namespace Teleglib.Example {
     public class Application : BotApplication {
@@ -28,6 +29,7 @@ namespace Teleglib.Example {
             );
             services.AddSingleton<ILoggerFactory>(loggerFactory);
             services.AddSingleton<IConfiguration>(_configuration);
+            services.AddSingleton<ISessionStorage, InMemorySessionStorage>();
         }
 
         private void ConfigureMiddlewares(MiddlewaresChainBuilder chainBuilder) {
