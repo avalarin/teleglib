@@ -11,11 +11,11 @@ namespace Teleglib.Router {
             _routes = new List<PatternsRoute>();
         }
 
-        public RouterConfigurationBuilder MapRoute(string name, string pattern, object defaults = null) {
+        public RouterConfigurationBuilder MapRoute(string name, string pattern, object defaults = null, string details = null) {
             var defaultsDict = defaults?.GetProperties().ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString())
                 ?? new Dictionary<string, string>();
 
-            _routes.Add(new PatternsRoute(name, pattern, defaultsDict));
+            _routes.Add(new PatternsRoute(name, pattern, defaultsDict, details));
             return this;
         }
 

@@ -85,7 +85,7 @@ namespace Teleglib.Controllers {
                     .MergeTo(defaults);
             }
 
-            return new PatternsRoute(name, pattern, defaults);
+            return new PatternsRoute(name, pattern, defaults, actionAttribute.Details);
         }
 
         public IController GetController(MiddlewareData input) {

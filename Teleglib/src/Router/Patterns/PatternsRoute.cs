@@ -5,15 +5,16 @@ using System.Linq;
 
 namespace Teleglib.Router.Patterns {
     public class PatternsRoute : IRoute {
-
         public string Name { get; }
         private string Pattern { get; }
+        private string Details { get; }
         private IRoutePatternPart[] Parts { get; }
         private Dictionary<string, string> Defaults { get; }
 
-        public PatternsRoute(string name, string pattern, Dictionary<string, string> defaults) {
+        public PatternsRoute(string name, string pattern, Dictionary<string, string> defaults, string details) {
             Name = name;
             Defaults = defaults;
+            Details = details;
             Parts = RoutePatternParser.Parse(pattern).ToArray();
             Pattern = pattern;
         }
@@ -44,7 +45,7 @@ namespace Teleglib.Router.Patterns {
             var nextPart = Parts[routingData.PathParts.Length];
             var nextExactPath = nextPart as ExactRoutePatternPart;
             if (nextExactPath == null) throw new InvalidOperationException("Cannot create completion link for route part " + nextPart.GetType());
-            var completionText = "/" + nextExactPath.ExactValue;
+            var completionText = "/" + nextExactPath.ExactValue + " - " + Details;
             return RouteMatch.CreateUncompleted(this, fields, completionText);
         }
 

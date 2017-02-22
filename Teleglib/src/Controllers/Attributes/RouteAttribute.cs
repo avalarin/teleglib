@@ -8,6 +8,8 @@ namespace Teleglib.Controllers.Attributes {
 
         public object Defaults { get; set; }
 
+        public string Details { get; set; }
+
         public RouteAttribute(string pattern) {
             Pattern = pattern;
         }
