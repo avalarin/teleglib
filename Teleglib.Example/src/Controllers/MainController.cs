@@ -1,23 +1,19 @@
 ﻿using Teleglib.Controllers.Attributes;
 using Teleglib.Controllers.Results;
-using Teleglib.Features;
-using Teleglib.Middlewares;
+using Teleglib.Telegram.Models;
 
 namespace Teleglib.Example.Controllers {
     [Route("/get")]
     public class MainController {
 
         [Route("name", Details = "Вывод полного имени")]
-        public IActionResult Index(MiddlewareData data) {
-            var user = data.Features.RequireOne<UpdateInfoFeature>().Update.Message.Chat;
-            return new ResponseResult() { Text = $"Имя: {user.FirstName} {user.LastName}"};
+        public IActionResult Index(ChatInfo chat) {
+            return new ResponseResult() { Text = $"Имя: {chat.FirstName} {chat.LastName}"};
         }
 
         [Route("nick", Details = "Вывод никнейма")]
-        public IActionResult Subgroup(MiddlewareData data) {
-            var user = data.Features.RequireOne<UpdateInfoFeature>().Update.Message.Chat;
-            return new ResponseResult() { Text = $"Никнейм: {user.UserName}"};
+        public IActionResult Subgroup(ChatInfo chat) {
+           return new ResponseResult() { Text = $"Никнейм: {chat.UserName}"};
          }
-
      }
- }
+}
