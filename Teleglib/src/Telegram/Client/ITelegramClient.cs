@@ -14,6 +14,9 @@ namespace Teleglib.Telegram.Client {
         Task<MessageInfo> SendMessage(SendMessageData data,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<MessageInfo> UpdateMessage(UpdateMessageData data,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<IEnumerable<UpdateInfo>> GetUpdates(
             long offset = 0,
             int limit = 100,

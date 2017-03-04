@@ -60,6 +60,11 @@ namespace Teleglib.Telegram.Client {
             return await SendRequestAsync<MessageInfo>("sendMessage", data, cancellationToken);
         }
 
+        public async Task<MessageInfo> UpdateMessage(UpdateMessageData data, CancellationToken cancellationToken = new CancellationToken()) {
+
+            return await SendRequestAsync<MessageInfo>("editMessageText", data, cancellationToken);
+        }
+
         public async Task<IEnumerable<UpdateInfo>> GetUpdates(
             long offset = 0,
             int limit = 100,
@@ -101,7 +106,7 @@ namespace Teleglib.Telegram.Client {
                         strPayload = strWriter.ToString();
                     }
 
-                    _logger.LogDebug($"Trying to send request GET {uri}");
+                    _logger.LogDebug($"Trying to send request POST {uri}");
                     _logger.LogDebug($"with {strPayload}");
 
                     HttpContent content = new StringContent(strPayload, _encoding, "application/json");

@@ -10,5 +10,14 @@ namespace Teleglib.Telegram.Models {
         [JsonProperty(PropertyName = "message")]
         public MessageInfo Message { get; set; }
 
+        [JsonProperty(PropertyName = "edited_message")]
+        public MessageInfo EditedMessage { get; set; }
+
+        [JsonProperty(PropertyName = "channel_post")]
+        public MessageInfo ChannelPost { get; set; }
+
+        [JsonProperty(PropertyName = "edited_channel_post")]
+        public MessageInfo EditedChannelPost { get; set; }
+
     }
 }
