@@ -55,7 +55,7 @@ namespace Teleglib.Features {
 
         public T RequireOne<T>() where T : TBase {
             return GetOne<T>()
-                .OrElseThrow(() => new InvalidOperationException($"Set don't have features of type {typeof(T)}"));
+                .OrElseThrow(() => new InvalidOperationException($"Set has no features of type {typeof(T)}"));
         }
 
         public IEnumerable<T> GetAll<T>() where T : TBase {
@@ -65,5 +65,8 @@ namespace Teleglib.Features {
                 .Select(item => (T)item);
         }
 
+        public IEnumerable<T> GetAllOfBaseType<T>() {
+            return _features.Values.SelectMany(l => l).OfType<T>();
+        }
     }
 }

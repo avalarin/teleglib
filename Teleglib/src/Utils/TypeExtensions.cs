@@ -5,6 +5,11 @@ using System.Reflection;
 namespace Teleglib.Utils {
     public static class TypeExtensions {
 
+        public static bool IsMathesWithGenericDefinition(this Type type, Type genericDifinition) {
+            var typeInfo = type.GetTypeInfo();
+            return typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == genericDifinition;
+        }
+
         public static MethodInfo GetGenericMethod(this Type type, string name, BindingFlags flags, Func<Type, Type[]> typesProvider) {
             return GetGenericMethod(type, name, flags, 1, types => typesProvider(types[0]));
         }

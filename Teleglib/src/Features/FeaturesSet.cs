@@ -55,5 +55,8 @@ namespace Teleglib.Features {
                 .OrElseGet(Enumerable.Empty<T>);
         }
 
+        public IEnumerable<T> GetAllOfBaseType<T>() {
+            throw new NotImplementedException();
+        }
     }
 }

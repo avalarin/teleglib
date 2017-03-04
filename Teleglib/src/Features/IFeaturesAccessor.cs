@@ -12,5 +12,7 @@ namespace Teleglib.Features {
 
         IEnumerable<T> GetAll<T>() where T : TBase;
 
+        IEnumerable<T> GetAllOfBaseType<T>();
+
     }
 }

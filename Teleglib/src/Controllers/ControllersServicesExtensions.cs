@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Teleglib.Controllers.Actions;
+using Teleglib.Parameters;
 using Teleglib.Router;
 
 namespace Teleglib.Controllers {
