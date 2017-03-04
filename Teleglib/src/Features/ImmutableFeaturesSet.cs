@@ -28,6 +28,18 @@ namespace Teleglib.Features {
             return new ImmutableFeaturesSet<TBase>(newDict);
         }
 
+        public ImmutableFeaturesSet<TBase> ReplaceExclusive<T>(Func<T, T> updater) where T : TBase {
+            var newDict = _features.Update(typeof(T),
+                valueFactory: t => ImmutableList<TBase>.Empty,
+                valueUpdater: (t, list) => {
+                    if (list.Count == 0) throw new InvalidOperationException($"Set has no features of type {typeof(T)}");
+                    if (list.Count > 1) throw new InvalidOperationException($"Set has more that 1 features of type {typeof(T)}");
+                    return list.Clear().Add(updater((T)list.Single()));
+                });
+
+            return new ImmutableFeaturesSet<TBase>(newDict);
+        }
+
         public ImmutableFeaturesSet<TBase> Add<T>(TBase feature) where T : TBase {
             var newDict = _features.Update(typeof(T),
                 valueFactory: t => ImmutableList<TBase>.Empty,
