@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Teleglib.Middlewares;
-using Teleglib.Storage;
+using Teleglib.Session;
 using Teleglib.Telegram.Client;
 
 namespace Teleglib.Renderers {
@@ -24,7 +24,7 @@ namespace Teleglib.Renderers {
             var joinedContext = tasks.Select(t => t.Result);
 
             var newData = outputData.UpdateFeatures(f =>
-                f.ReplaceExclusive<ContextFeature>(e =>
+                f.ReplaceExclusive<SessionFeature>(e =>
                     e.Join(joinedContext)
                 )
             );

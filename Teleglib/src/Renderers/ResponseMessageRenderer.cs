@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Teleglib.Features;
 using Teleglib.Middlewares;
-using Teleglib.Storage;
+using Teleglib.Session;
 using Teleglib.Telegram.Client;
 using Teleglib.Telegram.Models;
 
@@ -18,7 +18,7 @@ namespace Teleglib.Renderers {
 
         public async Task<MessageContext> Render(MiddlewareData middlewareData, ITelegramClient telegramClient, CancellationToken cancellationToken) {
             var update = middlewareData.Features.RequireOne<UpdateInfoFeature>().Update;
-            var context = middlewareData.Features.RequireOne<ContextFeature>().Context;
+            var context = middlewareData.Features.RequireOne<SessionFeature>().Context;
 
             if (update.EditedMessage != null && context.SentMessageIds.Any()) {
                 await telegramClient.UpdateMessage(new UpdateMessageData() {

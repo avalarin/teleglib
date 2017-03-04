@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Teleglib.Features;
 using Teleglib.Middlewares;
-using Teleglib.Storage;
+using Teleglib.Session;
 using Teleglib.Telegram.Models;
 
 namespace Teleglib.Router {
@@ -30,7 +30,7 @@ namespace Teleglib.Router {
                 routingData = JoinRoutingData(prevRoutingData, routingData);
             }
 
-            var dataWithContext = data.UpdateFeatures(f => f.ReplaceExclusive<ContextFeature>(
+            var dataWithContext = data.UpdateFeatures(f => f.ReplaceExclusive<SessionFeature>(
                     e => e.SetRoutingData(prevRoutingData)
                 )
             );

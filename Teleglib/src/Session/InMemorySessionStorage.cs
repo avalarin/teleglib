@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Teleglib.Renderers;
 using Teleglib.Router;
 
-namespace Teleglib.Storage {
+namespace Teleglib.Session {
     public class InMemorySessionStorage : ISessionStorage {
         private readonly Dictionary<long, RoutingData> _routingDatas = new Dictionary<long, RoutingData>();
         private readonly Dictionary<MessageIdentifier, MessageContext> _contexts = new Dictionary<MessageIdentifier, MessageContext>();

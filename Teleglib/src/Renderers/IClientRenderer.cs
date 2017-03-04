@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Teleglib.Middlewares;
-using Teleglib.Storage;
+using Teleglib.Session;
 using Teleglib.Telegram.Client;
 
 namespace Teleglib.Renderers {

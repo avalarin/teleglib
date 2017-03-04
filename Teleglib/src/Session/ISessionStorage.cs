@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Teleglib.Renderers;
 using Teleglib.Router;
 
-namespace Teleglib.Storage {
+namespace Teleglib.Session {
     public interface ISessionStorage {
         Task SaveMessageContextAsync(long chatId, long messageId, MessageContext context);
         Task<MessageContext> LoadMessageContextAsync(long chatId, long messageId);

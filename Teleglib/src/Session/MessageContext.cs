@@ -2,7 +2,7 @@
 using System.Linq;
 using Teleglib.Router;
 
-namespace Teleglib.Storage {
+namespace Teleglib.Session {
     public class MessageContext {
 
         public RoutingData RoutingData { get; }
