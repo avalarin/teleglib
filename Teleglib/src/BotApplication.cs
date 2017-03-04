@@ -103,12 +103,7 @@ namespace Teleglib {
                     var inputData = new MiddlewareData()
                         .UpdateFeatures(f => f.AddExclusive<UpdateInfoFeature>(new UpdateInfoFeature(updateInfo)));
 
-                    var outputData = await _middlewaresChain.NextAsync(inputData);
-
-                    foreach (var renderer in outputData.Renderers) {
-                        await renderer.Render(_client, CancellationToken.None);
-                    }
-
+                    await _middlewaresChain.NextAsync(inputData);
                 }
                 catch (Exception e) {
                     _logger.LogError(0, e, "Unhandled exception occured");

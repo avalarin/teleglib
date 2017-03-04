@@ -9,7 +9,7 @@ namespace Teleglib.Middlewares {
             var incomeMessage = data.Features.RequireOne<UpdateInfoFeature>().Update.Message;
             var chatId = incomeMessage.Chat.Id.ToString();
             messageData.ChatId = chatId;
-            return data.AddRenderer(new SendMessageRenderer(messageData));
+            return data.AddRenderer(new SendMessageRenderer(chatId, messageData.Text));
         }
 
     }

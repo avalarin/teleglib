@@ -1,9 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Teleglib.Middlewares;
+using Teleglib.Storage;
 using Teleglib.Telegram.Client;
 
 namespace Teleglib.Renderers {
     public interface IClientRenderer {
-        Task Render(ITelegramClient client, CancellationToken cancellationToken);
+        Task<MessageContext> Render(MiddlewareData middlewareData, ITelegramClient telegramClient, CancellationToken cancellationToken);
     }
 }
