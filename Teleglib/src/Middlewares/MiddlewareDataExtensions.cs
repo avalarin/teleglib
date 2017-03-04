@@ -1,15 +1,12 @@
 ﻿using Teleglib.Features;
 using Teleglib.Renderers;
-using Teleglib.Telegram.Models;
 
 namespace Teleglib.Middlewares {
     public static class MiddlewareDataExtensions {
 
-        public static MiddlewareData AddResponseRenderer(this MiddlewareData data, SendMessageData messageData) {
-            var incomeMessage = data.Features.RequireOne<UpdateInfoFeature>().Update.Message;
-            var chatId = incomeMessage.Chat.Id.ToString();
-            messageData.ChatId = chatId;
-            return data.AddRenderer(new SendMessageRenderer(chatId, messageData.Text));
+        public static MiddlewareData AddResponseRenderer(this MiddlewareData data, string text) {
+            var chatId = data.Features.RequireOne<UpdateInfoFeature>().GetAnyMessage().Chat.Id;
+            return data.AddRenderer(new SendMessageRenderer(chatId.ToString(), text));
         }
 
     }

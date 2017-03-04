@@ -7,7 +7,7 @@ namespace Teleglib.Controllers.Results {
         public string Text { get; set; }
 
         public MiddlewareData Render(MiddlewareData input) {
-            return input.AddResponseRenderer(new SendMessageData() { Text = Text } );
+            return input.AddResponseRenderer(Text);
         }
 
     }

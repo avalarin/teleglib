@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Teleglib.Features;
-using Teleglib.Renderers;
-using Teleglib.Telegram.Models;
 
 namespace Teleglib.Middlewares {
     public class HandleErrorMiddleware : IMiddleware {
@@ -19,9 +16,7 @@ namespace Teleglib.Middlewares {
             }
             catch (Exception e) {
                 _logger.LogError(0, e, "Unexpected error occurred");
-                return data.AddResponseRenderer(new SendMessageData() {
-                    Text = $"Error occured: [{e.GetType().Name}] {e.Message}"
-                });
+                return data.AddResponseRenderer($"Error occured: [{e.GetType().Name}] {e.Message}");
             }
         }
     }

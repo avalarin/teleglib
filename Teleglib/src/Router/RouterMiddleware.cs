@@ -35,17 +35,13 @@ namespace Teleglib.Router {
             var match = _router.FindRoute(routingData);
             if (!match.IsMatched) {
                 await _sessionStorage.SetAsync(SessionStorageKeys.PreviousRoutingData, null);
-                return data.AddResponseRenderer(new SendMessageData() {
-                    Text = $"Unknown command {routingData.UserCommand}"
-                });
+                return data.AddResponseRenderer($"Unknown command {routingData.UserCommand}");
             }
 
             if (!match.IsCompleted) {
                 await _sessionStorage.SetAsync(SessionStorageKeys.PreviousRoutingData, routingData);
                 var links = match.UncompletedRoutes.Select(r => r.CompletionText);
-                return data.AddResponseRenderer(new SendMessageData() {
-                    Text = string.Join("\n", links)
-                });
+                return data.AddResponseRenderer(string.Join("\n", links));
             }
             await _sessionStorage.SetAsync(SessionStorageKeys.PreviousRoutingData, null);
 
