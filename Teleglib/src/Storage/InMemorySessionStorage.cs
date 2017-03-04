@@ -1,54 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Teleglib.Utils;
+using Teleglib.Renderers;
+using Teleglib.Router;
 
 namespace Teleglib.Storage {
     public class InMemorySessionStorage : ISessionStorage {
-        private readonly Dictionary<Key, object> _storage = new Dictionary<Key, object>();
+        private readonly Dictionary<long, RoutingData> _routingDatas = new Dictionary<long, RoutingData>();
+        private readonly Dictionary<MessageIdentifier, MessageContext> _contexts = new Dictionary<MessageIdentifier, MessageContext>();
 
-        public Task SetAsync<T>(ISessionStorageKey<T> key, T value) {
-            var intKey = new Key(key.GetType(), key.Name);
-            _storage[intKey] = value;
+        public Task SaveMessageContextAsync(long chatId, long messageId, MessageContext context) {
+            var id = new MessageIdentifier(chatId, messageId);
+            _contexts[id] = context;
             return Task.CompletedTask;
         }
 
-        public Task<T> GetAsync<T>(ISessionStorageKey<T> key) {
-            var intKey = new Key(key.GetType(), key.Name);
-            var value = (T)_storage.GetOrDefault(intKey);
-            return Task.FromResult(value);
+        public Task<MessageContext> LoadMessageContextAsync(long chatId, long messageId) {
+            var id = new MessageIdentifier(chatId, messageId);
+            MessageContext context;
+            if (!_contexts.TryGetValue(id, out context)) {
+                return Task.FromResult<MessageContext>(null);
+            }
+            return Task.FromResult(context);
         }
 
-        private class Key {
-            private readonly Type _keyType;
-            private readonly string _keyName;
+        public Task SaveRoutingDataAsync(long chatId, RoutingData routingData) {
+            _routingDatas[chatId] = routingData;
+            return Task.CompletedTask;
+        }
 
-            public Key(Type keyType, string keyName) {
-                _keyType = keyType;
-                _keyName = keyName;
+        public Task ClearRoutingDataAsync(long chatId) {
+            _routingDatas[chatId] = null;
+            return Task.CompletedTask;
+        }
+
+        public Task<RoutingData> GetRoutingDataAsync(long chatId) {
+            RoutingData routingData;
+            if (!_routingDatas.TryGetValue(chatId, out routingData)) {
+                return Task.FromResult<RoutingData>(null);
+            }
+            return Task.FromResult(routingData);
+        }
+
+        public class MessageIdentifier {
+            public long ChatId { get; }
+            public long MessageId { get; }
+
+            public MessageIdentifier(long chatId, long messageId) {
+                ChatId = chatId;
+                MessageId = messageId;
             }
 
-            public Type KeyType => _keyType;
-
-            public string KeyName => _keyName;
-
-            protected bool Equals(Key other) {
-                return Equals(_keyType, other._keyType) && string.Equals(_keyName, other._keyName);
+            protected bool Equals(MessageIdentifier other) {
+                return ChatId == other.ChatId && MessageId == other.MessageId;
             }
 
             public override bool Equals(object obj) {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((Key) obj);
+                return Equals((MessageIdentifier) obj);
             }
 
             public override int GetHashCode() {
                 unchecked {
-                    return ((_keyType?.GetHashCode() ?? 0) * 397) ^ (_keyName?.GetHashCode() ?? 0);
+                    return (ChatId.GetHashCode() * 397) ^ MessageId.GetHashCode();
                 }
             }
         }
-
     }
 }

@@ -30,34 +30,51 @@ namespace Teleglib.Router {
                 routingData = JoinRoutingData(prevRoutingData, routingData);
             }
 
+            var dataWithContext = data.UpdateFeatures(f => f.ReplaceExclusive<ContextFeature>(
+                    e => e.SetRoutingData(prevRoutingData)
+                )
+            );
+
             _logger.LogDebug($"Try find route for {routingData.Path} ({routingData.UserCommand})");
 
             var match = _router.FindRoute(routingData);
+            var chatId = dataWithContext.Features.RequireOne<UpdateInfoFeature>().GetAnyMessage().Chat.Id;
             if (!match.IsMatched) {
-                await _sessionStorage.SetAsync(SessionStorageKeys.PreviousRoutingData, null);
-                return data.AddResponseRenderer($"Unknown command {routingData.UserCommand}");
+                await _sessionStorage.ClearRoutingDataAsync(chatId);
+                return dataWithContext.AddResponseRenderer($"Unknown command {routingData.UserCommand}");
             }
 
             if (!match.IsCompleted) {
-                await _sessionStorage.SetAsync(SessionStorageKeys.PreviousRoutingData, routingData);
+                await _sessionStorage.SaveRoutingDataAsync(chatId, routingData);
                 var links = match.UncompletedRoutes.Select(r => r.CompletionText);
-                return data.AddResponseRenderer(string.Join("\n", links));
+                return dataWithContext.AddResponseRenderer(string.Join("\n", links));
             }
-            await _sessionStorage.SetAsync(SessionStorageKeys.PreviousRoutingData, null);
+            await _sessionStorage.ClearRoutingDataAsync(chatId);
 
             var route = match.CompletedRoute;
-            var feature = new RouterFeature(route.Route, route.Fields);
-            var newData = data.UpdateFeatures(f => f.AddExclusive<RouterFeature>(feature));
+            var feature = new RouterFeature(route.Route, routingData, route.Fields);
+            var dataWithRoute = dataWithContext.UpdateFeatures(f => f.AddExclusive<RouterFeature>(feature));
 
-            return await chain.NextAsync(newData);
+            return await chain.NextAsync(dataWithRoute);
         }
 
         private async Task<RoutingData> LoadSavedRoutingData(MiddlewareData data) {
-            return await _sessionStorage.GetAsync(SessionStorageKeys.PreviousRoutingData);
+            var message = data.Features.RequireOne<UpdateInfoFeature>().GetAnyMessage();
+            var chatId = message.Chat.Id;
+            var messageId = message.Id;
+
+            var context = await _sessionStorage.LoadMessageContextAsync(chatId, messageId);
+            if (context != null) {
+                return context.RoutingData;
+            }
+
+            return await _sessionStorage.GetRoutingDataAsync(chatId);
         }
 
         private static RoutingData ParseRoutingData(MiddlewareData data) {
-            var messageText = data.Features.RequireOne<UpdateInfoFeature>().Update.Message.Text;
+            var update = data.Features.RequireOne<UpdateInfoFeature>().Update;
+            var message = update.Message ?? update.EditedMessage;
+            var messageText = message.Text;
             var match = FindCommandRegex.Match(messageText);
             if (!match.Success) {
                 return new RoutingData("", "", new string[0], messageText);
@@ -68,11 +85,11 @@ namespace Teleglib.Router {
             return new RoutingData(path, path, parts, content);
         }
 
-        private RoutingData JoinRoutingData(RoutingData prev, RoutingData next) {
+        private static RoutingData JoinRoutingData(RoutingData prev, RoutingData next) {
             var newParts = new string[prev.PathParts.Length + next.PathParts.Length];
             Array.Copy(prev.PathParts, 0, newParts, 0, prev.PathParts.Length);
             Array.Copy(next.PathParts, 0, newParts, prev.PathParts.Length, next.PathParts.Length);
-            return new RoutingData(next.UserCommand, prev.Path + ":" + next.Path, newParts, next.Content);
+            return new RoutingData(next.UserCommand, prev.Path + ":" + next.Path, newParts, next.Content, prev);
         }
     }
 }

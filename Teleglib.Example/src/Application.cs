@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Teleglib.Controllers;
 using Teleglib.Middlewares;
+using Teleglib.Renderers;
 using Teleglib.Router;
 using Teleglib.Storage;
 
@@ -34,6 +35,8 @@ namespace Teleglib.Example {
 
         private void ConfigureMiddlewares(MiddlewaresChainBuilder chainBuilder) {
             chainBuilder
+                .InsertLast<ContextMiddleware>()
+                .InsertLast<RenderingMiddleware>()
                 .InsertLast<RouterMiddleware>()
                 .InsertLast<ControllersMiddleware>();
         }

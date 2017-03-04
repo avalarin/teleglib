@@ -8,8 +8,11 @@ namespace Teleglib.Router {
 
         public ReadOnlyDictionary<string, string> Fields { get; }
 
-        public RouterFeature(IRoute route, Dictionary<string, string> fields) {
+        public RoutingData RoutingData { get; }
+
+        public RouterFeature(IRoute route, RoutingData routingData, Dictionary<string, string> fields) {
             Route = route;
+            RoutingData = routingData;
             Fields = new ReadOnlyDictionary<string, string>(fields);
         }
     }
