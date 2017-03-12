@@ -40,6 +40,7 @@ namespace Teleglib {
                 _services.AddSingleton<ITelegramClient, TelegramClient>();
                 _services.AddSingleton<IClientConfiguration, ClientAutoConfiguration>();
                 _services.AddSingleton<IAutoPollerConfiguration, AutoPollerAutoConfiguration>();
+                _services.AddSingleton<IMiddlewaresChainFactory, MiddlewaresChainFactory>();
 
                 var middlewaresChainBuilder = new MiddlewaresChainBuilder();
                 middlewaresChainBuilder.InsertFirst<HandleErrorMiddleware>();
@@ -72,7 +73,8 @@ namespace Teleglib {
 
                 CallConfigure();
 
-                _middlewaresChain = middlewaresChainBuilder.Build(_serviceProvider);
+                var middlewaresChainFactory = _serviceProvider.GetRequiredService<IMiddlewaresChainFactory>();
+                _middlewaresChain = middlewaresChainBuilder.Build(middlewaresChainFactory);
                 _cancellationTokenSource = new CancellationTokenSource();
                 _updatesProcessingTask = ProcessUpdates(_cancellationTokenSource.Token);
 
