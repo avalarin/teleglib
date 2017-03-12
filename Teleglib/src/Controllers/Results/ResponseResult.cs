@@ -1,13 +1,21 @@
 ﻿using Teleglib.Middlewares;
-using Teleglib.Telegram.Models;
+using Teleglib.Renderers;
 
 namespace Teleglib.Controllers.Results {
     public class ResponseResult : IActionResult {
 
-        public string Text { get; set; }
+        public MessageData MessageData { get; }
+
+        public ResponseResult(string text) {
+            MessageData = new MessageData(text);
+        }
+
+        public ResponseResult(MessageData messageData) {
+            MessageData = messageData;
+        }
 
         public MiddlewareData Render(MiddlewareData input) {
-            return input.AddResponseRenderer(Text);
+            return input.AddResponseRenderer(MessageData);
         }
 
     }

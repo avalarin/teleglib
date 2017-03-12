@@ -11,7 +11,7 @@ namespace Teleglib.Features {
         }
 
         public MessageInfo GetAnyMessage() {
-            return Update.Message ?? Update.EditedMessage ?? Update.ChannelPost ?? Update.EditedChannelPost;
+            return Update.Message ?? Update.EditedMessage ?? Update.ChannelPost ?? Update.EditedChannelPost ?? Update.CallbackQuery?.Message;
         }
 
         public IEnumerable<ParameterValue> GetValues() {

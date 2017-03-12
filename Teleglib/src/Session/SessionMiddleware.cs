@@ -20,6 +20,9 @@ namespace Teleglib.Session {
             var outputContext = output.Features.RequireOne<SessionFeature>().Context;
 
             await _sessionStorage.SaveMessageContextAsync(message.Chat.Id, message.Id, outputContext);
+            foreach (var sentMessageId in outputContext.SentMessageIds) {
+                await _sessionStorage.SaveMessageContextAsync(message.Chat.Id, sentMessageId, outputContext);
+            }
 
             return output;
         }

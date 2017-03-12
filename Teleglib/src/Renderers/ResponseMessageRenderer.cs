@@ -10,36 +10,33 @@ using Teleglib.Telegram.Models;
 
 namespace Teleglib.Renderers {
     public class ResponseMessageRenderer : IClientRenderer {
-        private string Text { get;  }
+        private readonly MessageData _messageData;
 
-        public ResponseMessageRenderer(string text) {
-            Text = text;
+        public ResponseMessageRenderer(MessageData messageData) {
+            _messageData = messageData;
         }
 
         public async Task<MessageContext> Render(MiddlewareData middlewareData, ITelegramClient telegramClient, CancellationToken cancellationToken) {
-            var update = middlewareData.Features.RequireOne<UpdateInfoFeature>().Update;
             var context = middlewareData.Features.RequireOne<SessionFeature>().Context;
-
-            if (update.EditedMessage != null && context.SentMessageIds.Any()) {
-                await telegramClient.UpdateMessage(new UpdateMessageData() {
-                    ChatId = update.EditedMessage.Chat.Id.ToString(),
-                    MessageId = context.SentMessageIds.First(),
-                    Text = Text
-                }, cancellationToken);
-                return MessageContext.Empty();
-            }
-
-            var message = update.Message ?? update.EditedMessage;
+            var message = middlewareData.Features.RequireOne<UpdateInfoFeature>().GetAnyMessage();
 
             if (message == null) {
                 throw new InvalidOperationException("Cannot send response");
             }
 
-            var chatId = message.Chat.Id;
-            var newMessage = await telegramClient.SendMessage(new SendMessageData() {
-                ChatId = message.Chat.Id.ToString(),
-                Text = Text
-            }, cancellationToken);
+            if (context.SentMessageIds.Any()) {
+                await telegramClient.UpdateMessage(new UpdateMessageData(
+                    message.Chat.Id.ToString(),
+                    context.SentMessageIds.First(),
+                    _messageData
+                ), cancellationToken);
+                return MessageContext.Empty();
+            }
+
+            var chatId = message.Chat.Id.ToString();
+            var newMessage = await telegramClient.SendMessage(new SendMessageData(
+                chatId, _messageData
+            ), cancellationToken);
 
             return MessageContext.Builder()
                 .AddMessageId(newMessage.Id)

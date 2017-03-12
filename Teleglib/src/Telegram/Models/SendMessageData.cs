@@ -1,8 +1,17 @@
 ﻿using Newtonsoft.Json;
+using Teleglib.Renderers;
 using Teleglib.Telegram.Converters;
 
 namespace Teleglib.Telegram.Models {
     public class SendMessageData {
+        public SendMessageData() {
+        }
+
+        public SendMessageData(string chatId, MessageData messageData) {
+            ChatId = chatId;
+            Text = messageData.Text;
+            ReplyMarkup = messageData.ReplyMarkup;
+        }
 
         [JsonProperty(PropertyName = "chat_id")]
         public string ChatId { get; set; }
@@ -22,6 +31,9 @@ namespace Teleglib.Telegram.Models {
 
         [JsonProperty(PropertyName = "reply_to_message_id", NullValueHandling = NullValueHandling.Ignore)]
         public long? ReplyToMessageId { get; set; }
+
+        [JsonProperty(PropertyName = "reply_markup", NullValueHandling = NullValueHandling.Ignore)]
+        public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
     }
 }

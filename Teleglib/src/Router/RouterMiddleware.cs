@@ -72,9 +72,16 @@ namespace Teleglib.Router {
         }
 
         private static RoutingData ParseRoutingData(MiddlewareData data) {
-            var update = data.Features.RequireOne<UpdateInfoFeature>().Update;
-            var message = update.Message ?? update.EditedMessage;
-            var messageText = message.Text;
+            var updateFeature = data.Features.RequireOne<UpdateInfoFeature>();
+            string messageText;
+            if (updateFeature.Update.CallbackQuery != null) {
+                var callback = updateFeature.Update.CallbackQuery;
+                messageText = callback.Data;
+            }
+            else {
+                var message = updateFeature.GetAnyMessage();
+                messageText = message.Text;
+            }
             var match = FindCommandRegex.Match(messageText);
             if (!match.Success) {
                 return new RoutingData("", "", new string[0], messageText);

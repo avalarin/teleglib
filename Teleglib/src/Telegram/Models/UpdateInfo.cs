@@ -19,5 +19,8 @@ namespace Teleglib.Telegram.Models {
         [JsonProperty(PropertyName = "edited_channel_post")]
         public MessageInfo EditedChannelPost { get; set; }
 
+        [JsonProperty(PropertyName = "callback_query")]
+        public CallbackQueryInfo CallbackQuery { get; set; }
+
     }
 }

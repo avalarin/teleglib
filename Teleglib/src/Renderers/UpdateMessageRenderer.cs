@@ -9,20 +9,20 @@ namespace Teleglib.Renderers {
     public class UpdateMessageRenderer : IClientRenderer {
         private readonly string _chatId;
         private readonly long _messageId;
-        private readonly string _text;
+        private readonly MessageData _messageData;
 
-        public UpdateMessageRenderer(string chatId, long messageId, string text) {
+        public UpdateMessageRenderer(string chatId, long messageId, MessageData messageData) {
             _chatId = chatId;
             _messageId = messageId;
-            _text = text;
+            _messageData = messageData;
         }
 
         public async Task<MessageContext> Render(MiddlewareData middlewareData, ITelegramClient telegramClient, CancellationToken cancellationToken) {
-            var newMessage = await telegramClient.UpdateMessage(new UpdateMessageData() {
-                ChatId = _chatId,
-                MessageId = _messageId,
-                Text = _text
-            }, cancellationToken);
+            var newMessage = await telegramClient.UpdateMessage(new UpdateMessageData(
+                    chatId: _chatId,
+                    messageId: _messageId,
+                    messageData: _messageData
+            ), cancellationToken);
 
             return MessageContext.Builder()
                 .AddMessageId(newMessage.Id)
