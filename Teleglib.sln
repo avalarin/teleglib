@@ -1,11 +1,11 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.0.0
-MinimumVisualStudioVersion = 10.0.0.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Teleglib", "Teleglib\Teleglib.xproj", "{6EFE9324-2D47-4324-83E2-FE45A83F9552}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teleglib", "Teleglib\Teleglib.csproj", "{6EFE9324-2D47-4324-83E2-FE45A83F9552}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Teleglib.Example", "Teleglib.Example\Teleglib.Example.xproj", "{61A6402C-12AD-4966-AA67-43FB0F2657A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teleglib.Example", "Teleglib.Example\Teleglib.Example.csproj", "{61A6402C-12AD-4966-AA67-43FB0F2657A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
