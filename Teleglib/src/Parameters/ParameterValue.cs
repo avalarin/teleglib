@@ -9,10 +9,8 @@ namespace Teleglib.Parameters {
         public Type Type { get; }
 
         public ParameterValue(string key, object value) {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (value == null) throw new ArgumentNullException(nameof(value));
-            Name = key;
-            Value = value;
+            Name = key ?? throw new ArgumentNullException(nameof(key));
+            Value = value ?? throw new ArgumentNullException(nameof(value), $"Cannot create ParameterValue(\"{key}\", null)");
             Type = value.GetType();
         }
     }

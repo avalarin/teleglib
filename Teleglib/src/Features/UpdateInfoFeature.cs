@@ -15,7 +15,7 @@ namespace Teleglib.Features {
         }
 
         public IEnumerable<ParameterValue> GetValues() {
-            var message = Update.Message ?? Update.EditedMessage;
+            var message = GetAnyMessage();
             return new List<ParameterValue>() {
                 new ParameterValue("update", Update),
                 new ParameterValue("message", message),

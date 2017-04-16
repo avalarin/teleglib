@@ -45,8 +45,13 @@ namespace Teleglib.Router.Patterns {
             var nextPart = Parts[routingData.PathParts.Length];
             var nextExactPath = nextPart as ExactRoutePatternPart;
             if (nextExactPath == null) throw new InvalidOperationException("Cannot create completion link for route part " + nextPart.GetType());
-            var completionText = "/" + nextExactPath.ExactValue + " - " + Details;
-            return RouteMatch.CreateUncompleted(this, fields, completionText);
+
+            var completionPath = "/" + Parts.Take(routingData.PathParts.Length + 1)
+                                     .Cast<ExactRoutePatternPart>()
+                                     .Select(p => p.ExactValue)
+                                     .JoinToString(":");
+            var completionData = new RouteCompletionData(Details, completionPath);
+            return RouteMatch.CreateUncompleted(this, fields, completionData);
         }
 
         public override string ToString() {

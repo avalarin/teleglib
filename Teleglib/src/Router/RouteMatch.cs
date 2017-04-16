@@ -14,7 +14,7 @@ namespace Teleglib.Router {
 
         public Dictionary<string, string> Fields { get; private set; }
 
-        public String CompletionText { get; private set; }
+        public RouteCompletionData CompletionData { get; private set; }
 
         private RouteMatch() {
         }
@@ -27,11 +27,11 @@ namespace Teleglib.Router {
                 IsCompleted = true,
                 Route = route,
                 Fields = fields,
-                CompletionText = null
+                CompletionData = null
             };
         }
 
-        public static RouteMatch CreateUncompleted(IRoute route, Dictionary<string, string> fields, string completionText) {
+        public static RouteMatch CreateUncompleted(IRoute route, Dictionary<string, string> fields, RouteCompletionData completionText) {
             if (route == null) throw new ArgumentNullException(nameof(route));
             if (fields == null) throw new ArgumentNullException(nameof(fields));
             return new RouteMatch() {
@@ -39,7 +39,7 @@ namespace Teleglib.Router {
                 IsCompleted = false,
                 Route = route,
                 Fields = fields,
-                CompletionText = completionText
+                CompletionData = completionText
             };
         }
 

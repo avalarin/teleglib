@@ -22,7 +22,7 @@ namespace Teleglib.Example.Controllers {
         public IActionResult GetTime() {
             return new ResponseResult(MessageData.Builder()
                         .SetText($"Сейчас: {DateTime.Now.TimeOfDay}")
-                        .SetInlineKeyboardMarkup(b => b.AddRow(r => r.AddItem(new InlineKeyboardButton("Обновить") { CallbackData = "/time" })))
+                        .SetInlineKeyboardMarkup(b => b.AddRow(r => r.AddItem(new InlineKeyboardButton("Обновить") { CallbackData = "/get:time" })))
                         .Build());
         }
      }
