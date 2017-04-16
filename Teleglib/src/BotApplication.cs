@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Teleglib.Controllers;
 using Teleglib.Features;
+using Teleglib.Localization;
 using Teleglib.Middlewares;
 using Teleglib.Polling;
 using Teleglib.Router;
@@ -41,6 +42,9 @@ namespace Teleglib {
                 _services.AddSingleton<IClientConfiguration, ClientAutoConfiguration>();
                 _services.AddSingleton<IAutoPollerConfiguration, AutoPollerAutoConfiguration>();
                 _services.AddSingleton<IMiddlewaresChainFactory, MiddlewaresChainFactory>();
+
+                _services.AddSingleton<LocalizationManager>();
+                _services.AddSingleton<ILocalizationProvider, EnglishLocalizationProvider>();
 
                 var middlewaresChainBuilder = new MiddlewaresChainBuilder();
                 middlewaresChainBuilder.InsertFirst<HandleErrorMiddleware>();
