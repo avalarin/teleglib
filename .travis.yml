@@ -3,5 +3,5 @@ sudo: required
 services:
   - docker
 
-script:
+install:
   - docker build .
