@@ -4,4 +4,4 @@ services:
   - docker
 
 script:
-  - docker build . --build-arg NUGET_PUSH=on --build-arg NUGET_SOURCE=$NUGET_API_URL --build-arg NUGET_API_KEY=$NUGET_API_KEY -f tools/build.dockerfile
+  - docker build . --build-arg NUGET_PUSH=yes --build-arg NUGET_SOURCE=$NUGET_API_URL --build-arg NUGET_API_KEY=$NUGET_API_KEY -f tools/build.dockerfile
