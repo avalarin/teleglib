@@ -25,4 +25,4 @@ RUN mv $SOURCES/Teleglib/bin/$CONFIGURATION $ARTIFACTS
 
 VOLUME /opt/artifacts
 
-RUN if [ $NUGET_PUSH = 'yes' ]; then dotnet nuget push $ARTIFACTS --source $NUGET_SOURCE --api-key $NUGET_API_KEY; fi
+RUN if [ $NUGET_PUSH = 'yes' ]; then dotnet nuget push $ARTIFACTS/*.nupkg --source $NUGET_SOURCE --api-key $NUGET_API_KEY; fi
